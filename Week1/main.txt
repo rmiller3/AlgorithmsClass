@@ -1,0 +1,125 @@
+#include <iostream>
+#include <fstream>
+#include <vector>
+using namespace std;
+
+int CountSplit(std::vector<int>& output, const std::vector<int>& left, const std::vector<int>& right)
+{
+    cout<<"Left:  ";
+    for (int i=0; i<left.size();i++)
+    {
+        cout<<left[i] << " ";
+    }
+    cout<<"Right:  ";
+    for (int i=0; i<right.size();i++)
+    {
+        cout<<right[i] << " ";
+    }
+    
+    int inversions = 0;
+    int i=0;
+    int j=0;
+    int totallength = left.size() + right.size();
+    for (int k=0; k<totallength; k++)
+    {
+        if (j>=right.size())
+        {
+            output.push_back(left[i]);
+            i++;
+        }
+        else if (left[i] > right[j])
+        {
+            inversions++;
+            output.push_back(right[j]);
+            j++;
+        }
+        else if (i<left.size())
+        {
+            output.push_back(left[i]);
+            i++;
+        }
+        else
+        {
+            output.push_back(right[j]);
+            j++;
+        }
+        
+    }
+    return inversions;
+}
+
+int CountInversions(std::vector<int> v, std::vector<int>& output)
+{
+    cout<<"Output: ";
+    for (int i=0; i<output.size();i++)
+    {
+        cout<<output[i] << " ";
+    }
+   
+    if(v.size() == 1)
+    {
+        output.push_back(v[0]);
+        return 0;
+    }
+    
+    int half = v.size() / 2;
+    std::vector<int> left(v.begin(), v.begin() + half);
+    std::vector<int> right(v.begin() + half, v.end());
+    cout<<"LLLeft:  ";
+    for (int i=0; i<left.size();i++)
+    {
+        cout<<left[i] << " ";
+    }
+    std::vector<int>tmpOut;
+    int l = CountInversions(left, tmpOut);
+    left = tmpOut;
+    tmpOut.clear();
+    cout<<"RRRight:  ";
+    for (int i=0; i<right.size();i++)
+    {
+        cout<<right[i] << " ";
+    }
+    int r = CountInversions(right, tmpOut);
+    right = tmpOut;
+    tmpOut.clear();
+    cout<<"\nSplit ";
+    int s = CountSplit(output, left, right);
+    cout<<"Outputx: ";
+    for (int i=0; i<output.size();i++)
+    {
+        cout<<output[i] << " ";
+    }
+    v = output;
+    cout<< "Return "<< l+r+s << " ";
+    return l+r+s;
+}
+
+
+int main()
+{
+    cout<<"one\n";
+    std::vector<int> v;
+  /*  ifstream inData;
+    inData.open("IntegerArray.txt");
+    while (!inData.eof())
+    {
+        int x = 0;
+        inData >> x;
+        v.push_back(x);
+    }
+    inData.close();
+    */
+    cout<<"two\n";
+    std::vector<int> v2 = {1, 2, 5, 4, 3, 6, 8, 7};
+    std::vector<int> output;
+    int x = CountInversions(v2,output);
+    cout<<"\nFinal: ";
+    for (int i=0; i<output.size();i++)
+    {
+        cout<<output[i] << " ";
+    }
+    cout <<"\n Inversions: " << x;
+   cout<<"\n Size: " << output.size();
+   
+   return 0;
+}
